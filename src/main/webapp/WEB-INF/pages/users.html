@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Пользователи</title>
+    <style>
+        table { border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        form { display: inline; }
+        input { padding: 5px; margin-right: 5px; }
+        .edit-form { display: none; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<h1>Список пользователей</h1>
+
+<form method="post" action="/users/save">
+    <input type="text" name="name" placeholder="Имя" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <button type="submit">Добавить</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Email</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <button onclick="showEditForm(this)">Редактировать</button>
+            <form method="post" action="/users/delete"
+                  th:attr="onsubmit='return confirm(\'Удалить пользователя?\')'">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button type="submit">Удалить</button>
+            </form>
+
+            <form class="edit-form" method="post" action="/users/update">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <input type="text" name="name" th:value="${user.name}" required>
+                <input type="email" name="email" th:value="${user.email}" required>
+                <button type="submit">Сохранить</button>
+                <button type="button" onclick="hideEditForm(this)">Отмена</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    function showEditForm(button) {
+        const row = button.closest('tr');
+        const editForm = row.querySelector('.edit-form');
+        editForm.style.display = 'block';
+    }
+
+    function hideEditForm(button) {
+        const form = button.closest('form');
+        form.style.display = 'none';
+    }
+</script>
+</body>
+</html>
