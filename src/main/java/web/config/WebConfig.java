@@ -13,11 +13,17 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import javax.servlet.Filter;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import javax.validation.Validator;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("web")
 public class WebConfig implements WebMvcConfigurer {
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
     @Bean
     public Filter characterEncodingFilter() {
